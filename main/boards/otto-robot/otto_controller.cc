@@ -474,6 +474,13 @@ public:
         ESP_LOGI(TAG, "MCP工具注册完成");
     }
 
+    void PlayWifiGreeting() {
+        if (!has_hands_) {
+            return;
+        }
+        QueueAction(ACTION_HANDS_UP, 1, 800, 0, 0);
+    }
+
     ~OttoController() {
         if (action_task_handle_ != nullptr) {
             vTaskDelete(action_task_handle_);
@@ -489,5 +496,12 @@ void InitializeOttoController() {
     if (g_otto_controller == nullptr) {
         g_otto_controller = new OttoController();
         ESP_LOGI(TAG, "Otto控制器已初始化并注册MCP工具");
+    }
+}
+
+void OttoGreetOnWifiConnected() {
+    if (g_otto_controller != nullptr) {
+        ESP_LOGI(TAG, "WiFi connected, play greeting (hands up)");
+        g_otto_controller->PlayWifiGreeting();
     }
 }

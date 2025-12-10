@@ -8,7 +8,7 @@
 
 class PowerManager {
 private:
-    // 电池电量区间-分压电阻为2个100k
+
     static constexpr struct {
         uint16_t adc;
         uint8_t level;
@@ -75,8 +75,8 @@ public:
         io_conf.intr_type = GPIO_INTR_DISABLE;
         io_conf.mode = GPIO_MODE_INPUT;
         io_conf.pin_bit_mask = (1ULL << charging_pin_);
-        io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
-        io_conf.pull_up_en = GPIO_PULLUP_ENABLE;
+        io_conf.pull_down_en = GPIO_PULLDOWN_ENABLE;
+        io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
         gpio_config(&io_conf);
 
         esp_timer_create_args_t timer_args = {

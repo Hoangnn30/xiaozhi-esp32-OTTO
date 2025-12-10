@@ -73,6 +73,7 @@ void WifiBoard::EnterWifiConfigMode() {
 
 void WifiBoard::StartNetwork() {
     // User can press BOOT button while starting to enter WiFi configuration mode
+    wifi_connected_notified_ = false;
     if (wifi_config_mode_) {
         EnterWifiConfigMode();
         return;
@@ -104,6 +105,8 @@ void WifiBoard::StartNetwork() {
         std::string notification = Lang::Strings::CONNECTED_TO;
         notification += ssid;
         display->ShowNotification(notification.c_str(), 30000);
+        wifi_connected_notified_ = true;
+        OnWifiConnected(ssid);
     });
     wifi_station.Start();
 
@@ -113,6 +116,10 @@ void WifiBoard::StartNetwork() {
         wifi_config_mode_ = true;
         EnterWifiConfigMode();
         return;
+    }
+    if (!wifi_connected_notified_ && wifi_station.IsConnected()) {
+        wifi_connected_notified_ = true;
+        OnWifiConnected(wifi_station.GetSsid());
     }
 }
 

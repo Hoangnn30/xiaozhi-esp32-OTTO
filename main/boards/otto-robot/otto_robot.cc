@@ -4,9 +4,11 @@
 #include <esp_lcd_panel_ops.h>
 #include <esp_lcd_panel_vendor.h>
 #include <esp_log.h>
+#include <string>
 #include <wifi_station.h>
 
 #include "application.h"
+#include "assets/lang_config.h"
 #include "codecs/no_audio_codec.h"
 #include "button.h"
 #include "config.h"
@@ -22,6 +24,7 @@
 #define TAG "OttoRobot"
 
 extern void InitializeOttoController();
+extern void OttoGreetOnWifiConnected();
 
 class OttoRobot : public WifiBoard {
 private:
@@ -98,6 +101,15 @@ private:
     void InitializeOttoController() {
         ESP_LOGI(TAG, "初始化Otto机器人MCP控制器");
         ::InitializeOttoController();
+    }
+
+protected:
+    void OnWifiConnected(const std::string& /*ssid*/) override {
+        OttoGreetOnWifiConnected();
+        if (display_ != nullptr) {
+            display_->SetChatMessage("system", Lang::Strings::HELLO_MY_FRIEND);
+        }
+        Application::GetInstance().PlaySound(Lang::Sounds::OGG_WELCOME);
     }
 
 public:
