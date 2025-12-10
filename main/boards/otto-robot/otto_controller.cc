@@ -479,6 +479,7 @@ public:
             return;
         }
         QueueAction(ACTION_HANDS_UP, 1, 800, 0, 0);
+        QueueAction(ACTION_HANDS_DOWN, 1, 800, 0, 0);
     }
 
     ~OttoController() {
